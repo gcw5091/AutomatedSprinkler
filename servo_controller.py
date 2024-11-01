@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-from angle_provider import AngleProvider  # Importing AngleProvider from angle_provider.py
+from calc_angles import main_controller  # Importing AngleProvider from main_controller.py
 
 class ServoControl:
     def __init__(self):
