@@ -1,5 +1,4 @@
 import tkinter as tk
-import numpy as np
 
 # Create main window
 root = tk.Tk()
@@ -33,32 +32,21 @@ def toggle_highlight(event):
         # Remove button coordinates from list
         highlighted_buttons.remove(int(button['text']))
 
-def toggle_submit(event):
-    button = event.widget  # Get button that was pressed
-    if button['bg'] == 'gray':
-        button.config(bg='lightgrey')
-    else:
-        button.config(bg='gray')
-
-# Function to calculate angles
-def calc_angles(x, y, h):
-    yaw_ang = np.arctan2(y, x) * 360 / (2 * np.pi)  
-    pitch_ang = 0  # Default pitch angle
-    return yaw_ang, pitch_ang
-
 # Function to handle submission
 def submit_coordinates(event):
     if highlighted_buttons:
+        coordinates = []
         for button_num in highlighted_buttons:
-            # Mapping based on button number (placeholder).
-            # Assume button number corresponds to x,y coordinates
-            x = (button_num - 1) % 3  # Column index
-            y = (button_num - 1) // 3  # Row index
+            # Mapping button number to (x, y) coordinates in meters
+            x = (button_num - 1) % 3  # Column index (0 to 2)
+            y = (button_num - 1) // 3  # Row index (0 to 2)
 
-            # height (can be modified as needed)
-            h = 1.0  
-            yaw, pitch = calc_angles(x, y, h)
-            coordinates_label.config(text=f"Coordinates: ({x}, {y}), Yaw: {yaw:.2f}, Pitch: {pitch:.2f}")
+            # Convert to meters (each button represents a 1m x 1m section)
+            coordinates.append((x, y))
+
+        # Simulate sending coordinates to the main controller
+        print("Coordinates sent to main controller:", coordinates)
+        coordinates_label.config(text=f"Coordinates: {coordinates}")
     else:
         coordinates_label.config(text="Coordinates: No buttons selected")
 
@@ -83,4 +71,3 @@ coordinates_label.grid(row=5, column=0, columnspan=3, pady=10)  # Placed below s
 
 # Run the application
 root.mainloop()
-
