@@ -45,13 +45,13 @@ class ServoControl:
         GPIO.cleanup()
 
 if __name__ == "__main__":
-    angle_provider = AngleProvider() # CHANGE NAME - THIS IS JUST A PLACE HOLDER FOR THE CLASS FROM THE MASTER CONTROLLER
+    calc_angle = main_controller() # CHANGE NAME - THIS IS JUST A PLACE HOLDER FOR THE CLASS FROM THE MASTER CONTROLLER
     servo_controller = ServoControl()
     
     try:
         while True:
             # Retrieve angles from AngleProvider instead of manual input
-            angle_x, angle_y = angle_provider.get_angles()
+            angle_x, angle_y = calc_angle.get_angles()
             servo_controller.move_servos(angle_x, angle_y)
             time.sleep(1)  # Adjust time as needed
     except KeyboardInterrupt:
