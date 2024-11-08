@@ -1,15 +1,14 @@
 import RPi.GPIO as GPIO
 import time
-from calc_angles import main_controller  # Importing AngleProvider from main_controller.py
 
 class ServoControl:
     def __init__(self):
         # Set up GPIO mode
         GPIO.setmode(GPIO.BOARD)
-        
+
         # Define GPIO pins for the servos
-        self.servo_x_pin = 11  # X-axis servos connected to pin 11
-        self.servo_y_pin = 13  # Y-axis servo connected to pin 13
+        self.servo_x_pin = 11  # X-axis servo
+        self.servo_y_pin = 13  # Y-axis servo
 
         # Set the GPIO pin mode to output
         GPIO.setup(self.servo_x_pin, GPIO.OUT)
@@ -24,35 +23,24 @@ class ServoControl:
         self.pwm_y.start(0)
 
     def set_servo_angle(self, pwm, angle):
-        # Calculate duty cycle from angle (2% to 12% duty cycle = 0 to 180 degrees)
+        """Convert angle to duty cycle and move the servo."""
         duty_cycle = 2 + (angle / 18)
         pwm.ChangeDutyCycle(duty_cycle)
         time.sleep(0.5)
-        pwm.ChangeDutyCycle(0)
+        pwm.ChangeDutyCycle(0)  # Stop PWM to avoid jitter
 
     def move_servos(self, angle_x, angle_y):
-        # Limit angle_y to 0-30 degrees
-        angle_y = max(0, min(angle_y, 30))
-        
-        # Move servos to angles
+        """Move servos to specified angles."""
+        angle_y = max(0, min(angle_y, 30))  # Limit Y-axis angle to 0-30 degrees
         self.set_servo_angle(self.pwm_x, angle_x)
         self.set_servo_angle(self.pwm_y, angle_y)
 
     def cleanup(self):
-        # Stop the PWM and cleanup GPIO on exit
+        """Stop the PWM and clean up GPIO on exit."""
         self.pwm_x.stop()
         self.pwm_y.stop()
         GPIO.cleanup()
-
-if __name__ == "__main__":
-    calc_angle = main_controller() # CHANGE NAME - THIS IS JUST A PLACE HOLDER FOR THE CLASS FROM THE MASTER CONTROLLER
-    servo_controller = ServoControl()
-    
-    try:
-        while True:
-            # Retrieve angles from AngleProvider instead of manual input
-            angle_x, angle_y = calc_angle.get_angles()
-            servo_controller.move_servos(angle_x, angle_y)
-            time.sleep(1)  # Adjust time as needed
-    except KeyboardInterrupt:
-        servo_controller.cleanup()
+   
+    def run(self):
+        """Run method if needed for continuous operation."""
+        pass  # Placeholder for any continuous functionality
