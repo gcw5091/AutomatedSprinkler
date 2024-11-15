@@ -2,6 +2,8 @@ from GUI import LawnGUI
 from dual_servo_actuator import ServoControl
 import math
 from scipy.optimize import fsolve
+import time
+
  
 class MainController:
     def __init__(self, v0, h):
@@ -43,6 +45,7 @@ class MainController:
             angle_y = self.projectile_motion_calculation(x, y)
             # Move servos to the calculated angles
             self.servo_control.move_servos(angle_x, angle_y)
+            time.sleep(2)
  
     def run(self):
         self.get_and_process_coordinates()
